@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider_basics_app/provider/counter_provider.dart';
+import 'package:provider_basics_app/provider/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  CounterProvider counterProvider = CounterProvider();
-  @override
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Switch.adaptive(
+            padding: .symmetric(horizontal: 20),
+            value: context.watch<ThemeProvider>().themechange(),
+            onChanged: (value) {
+              context.read<ThemeProvider>().toggle(value);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
-          child: Text(
-            'Counter : ${counterProvider.count}',
-            style: Theme.of(context).textTheme.headlineMedium,
+          child: Consumer(
+            builder: (cntx, value, child) {
+              return Text(
+                'Counter : ${cntx.watch<CounterProvider>().count}',
+                style: Theme.of(context).textTheme.headlineMedium,
+              );
+            },
+
           ),
         ),
       ),
@@ -21,14 +39,14 @@ class HomeScreen extends StatelessWidget {
         children: [
           FloatingActionButton(
             onPressed: () {
-              counterProvider.incriment();
+              context.read<CounterProvider>().incriment();
             },
             child: Icon(Icons.add),
           ),
           SizedBox(height: 20),
           FloatingActionButton(
             onPressed: () {
-              counterProvider.decriment();
+              context.read<CounterProvider>().decriment();
             },
             child: Icon(Icons.minimize),
           ),
