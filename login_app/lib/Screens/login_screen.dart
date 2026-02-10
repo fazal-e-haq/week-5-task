@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/Provides/auth_provider.dart';
+import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+import 'home_screen.dart';
+
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,23 +34,36 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: .center,
               children: [
                 Text(
-                  'W e l c o m e',
+                  'W e l c o m e\nB a c k',
+                  textAlign: .center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 SizedBox(height: 100),
-                loginField(
+                LoginField(
                   hintText: 'Email',
                   controller: emailController,
                   isobsure: false,
                 ),
                 SizedBox(height: 20),
-                loginField(
+                LoginField(
                   hintText: 'Password',
                   controller: passwordController,
                   isobsure: true,
                 ),
                 SizedBox(height: 200),
-                loginButton(context,emailController.text,passwordController.text),
+                loginButton(context),
+
+                // for check if user has data or not
+                //
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(builder: (context) => HomeScreen()),
+                //     );
+                //   },
+                //   child: Text('Home Screen'),
+                // ),
                 SizedBox(height: 20),
               ],
             ),
@@ -43,12 +73,20 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector loginButton(BuildContext context,String email,String password) {
+  GestureDetector loginButton(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
+        context.read<AuthProvider>().login(
+          emailController.text,
+          passwordController.text,
+        );
 
-
-
+        if (context.read<AuthProvider>().isloggedIn) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
       },
       child: Container(
         padding: .all(9),
@@ -58,18 +96,17 @@ class LoginScreen extends StatelessWidget {
           borderRadius: .circular(10),
         ),
         child: Center(
-          child: Text(
-            'Login',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          child: context.watch<AuthProvider>().isloggedIn
+              ? CircularProgressIndicator()
+              : Text('Login', style: Theme.of(context).textTheme.headlineSmall),
         ),
       ),
     );
   }
 }
 
-class loginField extends StatelessWidget {
-  loginField({
+class LoginField extends StatelessWidget {
+  LoginField({
     super.key,
     required this.controller,
     required this.hintText,
