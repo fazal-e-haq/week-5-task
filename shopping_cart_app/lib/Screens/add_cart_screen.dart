@@ -57,9 +57,74 @@ class AddCartScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'C h e c k o u t',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      SizedBox(height: 100),
 
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Text(
+                            'Total items ',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: .start,
+                          ),
+                          Text(
+                            context
+                                .watch<CartProvider>()
+                                .addedProductList
+                                .length
+                                .toString(),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: .start,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Text(
+                            'Total Price ',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: .start,
+                          ),
+                          Text(
+                            'Rs ${ context.watch<CartProvider>().totalPrice}',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: .start,
+                          ),
+                        ],
+                      ),
 
+                      SizedBox(height: 200),
 
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          fixedSize: WidgetStatePropertyAll(
+                            .fromWidth(double.maxFinite),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text('Confirm Order'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         },
         child: Icon(Icons.check),
       ),
