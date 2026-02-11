@@ -51,7 +51,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       newEmailController.text,
                     );
                     Navigator.pop(context);
-                  },
+                  },'New email'
                 );
               },
               leading: Icon(Icons.email),
@@ -68,7 +68,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       newEmailController.text,
                     );
                     Navigator.pop(context);
-                  },
+                  },'New Password'
                 );
               },
               leading: Icon(Icons.password),
@@ -84,28 +84,35 @@ class _SettingScreenState extends State<SettingScreen> {
     String changingValue,
     TextEditingController controller,
     void Function()? onPressed,
+      String hintText
   ) {
     return showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          insetPadding: .all(20),
-          child: Column(
-            children: [
-              TextFormField(controller: controller),
-              Row(
-                mainAxisAlignment: .end,
+
+          child: Container(
+            height: 200,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Cencle'),
+                  TextFormField(controller: controller,decoration: InputDecoration(hintText: hintText),),
+                  Row(
+                    mainAxisAlignment: .end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cencle'),
+                      ),
+                      TextButton(onPressed: onPressed, child: Text('Confirm')),
+                    ],
                   ),
-                  TextButton(onPressed: onPressed, child: Text('Confirm')),
                 ],
               ),
-            ],
+            ),
           ),
         );
       },

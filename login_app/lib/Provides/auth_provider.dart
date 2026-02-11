@@ -9,7 +9,7 @@ class AuthProvider extends ChangeNotifier {
 
   void login(String email, String password) {
     if (email.isEmpty || password.isEmpty) return;
-
+    if (!email.endsWith('@gmail.com')) return;
     _currentUser = UserModel(email: email, password: password);
     notifyListeners();
   }
